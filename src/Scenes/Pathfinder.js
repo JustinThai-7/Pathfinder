@@ -101,14 +101,30 @@ class Pathfinder extends Phaser.Scene {
     // an array which contains the tile ids of the visible tiles on screen.
     // This array can then be given to Easystar for use in path finding.
     layersToGrid() {
-        let grid = [];
-        // Initialize grid as two-dimensional array
-        // TODO: write initialization code
+    let grid = [];
 
-        // Loop over layers to find tile IDs, store in grid
-        // TODO: write this loop
+    // Iterate over rows
+    for (let y = 0; y < this.map.height; y++) {
+        const row = [];
 
-        return grid;
+        // Then columns
+        for (let x = 0; x < this.map.width; x++) {
+            let tileId = 0;  // Fallback tile id if no tile is found
+
+            this.map.layers.forEach(layerData => {
+                const tile = layerData.tilemapLayer.getTileAt(x, y);
+                if (tile) {
+                tileId = tile.index;
+                }
+            });
+
+        row.push(tileId);
+        }
+
+        grid.push(row);
+    }
+
+    return grid;
     }
 
 
@@ -159,7 +175,15 @@ class Pathfinder extends Phaser.Scene {
     // uses the value of the cost property to inform EasyStar, using EasyStar's
     // setTileCost(tileID, tileCost) function.
     setCost(tileset) {
-        // TODO: write this function
+        let firstGid = tileset.firstgid;
+        let lastGid  = firstGid + tileset.total - 1;
+
+        for (let gid = firstGid; gid <= lastGid; gid++) {
+            const props = tileset.getTileProperties(gid);
+            if (props && props.cost != null) {
+                this.finder.setTileCost(gid, props.cost);
+            }
+        }
     }
 
 

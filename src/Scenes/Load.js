@@ -17,7 +17,6 @@ class Load extends Phaser.Scene {
 
     create() {
         
-
          // ...and pass to the next Scene
          this.scene.start("pathfinderScene");
     }
